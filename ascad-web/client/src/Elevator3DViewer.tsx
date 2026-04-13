@@ -1747,11 +1747,10 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe8e8ee);
-    scene.fog = new THREE.FogExp2(0xe8e8ee, 0.008);
     sceneRef.current = scene;
 
     const w = container.clientWidth, h = container.clientHeight;
-    const camera = new THREE.PerspectiveCamera(50, w / h, 0.01, 100);
+    const camera = new THREE.PerspectiveCamera(50, w / h, 0.001, 500);
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: highQuality, alpha: false, preserveDrawingBuffer: true });
@@ -1768,17 +1767,70 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
-    controls.minDistance = 0.5;
-    controls.maxDistance = 30;
-    controls.maxPolarAngle = Math.PI * 0.95;
+    controls.minDistance = 0.01;
+    controls.maxDistance = 500;
+    controls.maxPolarAngle = Math.PI; // full freedom — can look from below too
     controls.enablePan = true;
+    controls.panSpeed = 2.0;
+    controls.rotateSpeed = 1.0;
     controls.enableRotate = true;
-    controls.enableZoom = true;
+    controls.screenSpacePanning = true;
+    controls.enableZoom = false; // We handle zoom ourselves for SketchUp-style zoom-to-cursor
     // Left=orbit, Middle=orbit, Right=pan (standard Three.js defaults work)
     controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
     controls.mouseButtons.MIDDLE = THREE.MOUSE.DOLLY;
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
     controlsRef.current = controls;
+
+    // ── Tekla-style zoom: middle-click sets pivot, scroll zooms toward pivot ──
+    // Double-click also sets pivot (orbit center)
+    let zoomPivot: THREE.Vector3 | null = null;
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      const zoomIn = event.deltaY < 0;
+      const factor = zoomIn ? 0.85 : 1.18;
+
+      // Zoom toward/away from pivot (or target if no pivot set)
+      const pivot = zoomPivot || controls.target.clone();
+      const dir = new THREE.Vector3().subVectors(pivot, camera.position);
+      const dist = dir.length();
+
+      if (zoomIn && dist < 0.001) return;
+
+      const moveAmount = dist * (1 - factor);
+      dir.normalize();
+
+      // Move both camera AND target together (no rotation change)
+      const moveVec = dir.clone().multiplyScalar(moveAmount);
+      camera.position.add(moveVec);
+      controls.target.add(moveVec);
+
+      controls.update();
+    };
+    renderer.domElement.addEventListener('wheel', handleWheel, { passive: false });
+
+    // Middle-click: set zoom/orbit pivot to clicked point
+    renderer.domElement.addEventListener('mousedown', (event) => {
+      if (event.button === 1) { // middle click
+        const rect = renderer.domElement.getBoundingClientRect();
+        const ndc = new THREE.Vector2(
+          ((event.clientX - rect.left) / rect.width) * 2 - 1,
+          -((event.clientY - rect.top) / rect.height) * 2 + 1
+        );
+        const rc = new THREE.Raycaster();
+        rc.setFromCamera(ndc, camera);
+        const targets = scene.children.filter(c =>
+          !c.userData._isCursor && !c.userData._isMeasure && !c.userData._isMeasurePreview && !c.userData._isGrid
+        );
+        const hits = rc.intersectObjects(targets, true);
+        if (hits.length > 0) {
+          zoomPivot = hits[0].point.clone();
+          controls.target.copy(zoomPivot);
+          controls.update();
+        }
+      }
+    });
 
     // Track mouse drag to distinguish click vs drag on left button
     let mouseDownPos = { x: 0, y: 0 };
@@ -1994,30 +2046,30 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
     // Helper: create 3D text sprite for measurement label
     const createMeasureLabel = (text: string, position: THREE.Vector3): THREE.Sprite => {
       const canvas = document.createElement('canvas');
-      canvas.width = 320; canvas.height = 80;
+      canvas.width = 256; canvas.height = 48;
       const ctx = canvas.getContext('2d')!;
-      // Background with rounded corners
-      ctx.fillStyle = 'rgba(0,0,0,0.85)';
+      ctx.fillStyle = 'rgba(0,0,0,0.8)';
       ctx.beginPath();
-      ctx.roundRect(4, 4, 312, 72, 10);
+      ctx.roundRect(2, 2, 252, 44, 6);
       ctx.fill();
-      // Border
       ctx.strokeStyle = '#00ff00';
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.roundRect(4, 4, 312, 72, 10);
+      ctx.roundRect(2, 2, 252, 44, 6);
       ctx.stroke();
-      // Text
       ctx.fillStyle = '#00ff00';
-      ctx.font = 'bold 32px Arial';
+      ctx.font = 'bold 22px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, 160, 40);
+      ctx.fillText(text, 128, 24);
       const tex = new THREE.CanvasTexture(canvas);
-      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, sizeAttenuation: true });
       const sprite = new THREE.Sprite(mat);
       sprite.position.copy(position);
-      sprite.scale.set(0.4, 0.1, 1);
+      // Scale based on camera distance for consistent screen size
+      const dist = camera.position.distanceTo(position);
+      const s = Math.max(0.02, dist * 0.06);
+      sprite.scale.set(s * 2, s * 0.4, 1);
       sprite.userData._isMeasure = true;
       return sprite;
     };
@@ -2155,7 +2207,7 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
             scene.add(previewLine);
             const liveDist = measureStartRef.current.distanceTo(pt) * 1000;
             const mid = measureStartRef.current.clone().add(pt).multiplyScalar(0.5);
-            mid.y += 0.05;
+            mid.y += 0.02;
             const liveLabel = createMeasureLabel(`${liveDist.toFixed(0)} mm`, mid);
             liveLabel.userData._isMeasurePreview = true;
             scene.add(liveLabel);
@@ -2186,7 +2238,7 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
             measureStartRef.current = pt;
             setMeasureText(`Başlangıç: ${result.snapType} — İkinci noktayı tıklayın... (Esc=İptal)`);
             // Start point marker
-            const startMarker = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 12), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+            const startMarker = new THREE.Mesh(new THREE.SphereGeometry(0.004, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
             startMarker.position.copy(pt);
             startMarker.userData._isMeasure = true;
             scene.add(startMarker);
@@ -2203,13 +2255,13 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
             line.userData._isMeasure = true;
             scene.add(line);
             // End point marker
-            const endMarker = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 12), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
+            const endMarker = new THREE.Mesh(new THREE.SphereGeometry(0.004, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff00 }));
             endMarker.position.copy(pt);
             endMarker.userData._isMeasure = true;
             scene.add(endMarker);
             // 3D measurement label at midpoint
             const mid = measureStartRef.current.clone().add(pt).multiplyScalar(0.5);
-            mid.y += 0.06;
+            mid.y += 0.02;
             const label = createMeasureLabel(`${dist.toFixed(1)} mm`, mid);
             scene.add(label);
             // Clean preview
@@ -2236,6 +2288,23 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
     const handleDblClick = (event: MouseEvent) => {
       if (isDragging) return;
       if (measureModeRef.current) return;
+      // Set zoom pivot on double-click (Tekla style)
+      const rect = renderer.domElement.getBoundingClientRect();
+      const ndc = new THREE.Vector2(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1
+      );
+      const rc = new THREE.Raycaster();
+      rc.setFromCamera(ndc, camera);
+      const targets = scene.children.filter(c =>
+        !c.userData._isCursor && !c.userData._isMeasure && !c.userData._isMeasurePreview && !c.userData._isGrid
+      );
+      const hits = rc.intersectObjects(targets, true);
+      if (hits.length > 0) {
+        zoomPivot = hits[0].point.clone();
+        controls.target.copy(zoomPivot);
+        controls.update();
+      }
       const name = doRaycast(event);
       if (name) {
         setSelectedPart(name);
@@ -2354,6 +2423,7 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
       renderer.domElement.removeEventListener('click', handleClick);
       renderer.domElement.removeEventListener('dblclick', handleDblClick);
       renderer.domElement.removeEventListener('mousemove', handleMouseMove);
+      renderer.domElement.removeEventListener('wheel', handleWheel);
       ro.disconnect();
       controls.dispose();
       renderer.dispose();
@@ -2857,7 +2927,7 @@ export default function Elevator3DViewer({ params }: Elevator3DViewerProps) {
         border: '1px solid #334155', color: '#64748b', padding: '3px 8px', borderRadius: 4,
         fontSize: 9, zIndex: 15, backdropFilter: 'blur(4px)', whiteSpace: 'nowrap',
       }}>
-        🖱 Sol Sürükle: Orbit | Sağ Sürükle: Pan | Scroll: Zoom | Sol Tık: Seç | Çift Tık: Detay | Esc: İptal | F: Sığdır
+        🖱 Sol Sürükle: Orbit | Sağ Sürükle: Pan | Scroll: Zoom | Çift Tık/Orta Tık: Pivot Belirle | Esc: İptal | F: Sığdır
       </div>
     </div>
   );
