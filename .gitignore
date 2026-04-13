@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+ascad-web/client/node_modules/
+
+# Build output
+ascad-web/client/dist/
+ascad-web/src/**/bin/
+ascad-web/src/**/obj/
+
+# IDE
+.vs/
+.vscode/
+*.suo
+*.user
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Env
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
