@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E7F9EC13-4994-4962-8A28-4FD94584FEA4}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>ascad</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="DevExpress.Office.v16.1.Core">
+      <HintPath>Devexpress\DevExpress.Office.v16.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v16.1.Core">
+      <HintPath>Devexpress\DevExpress.Pdf.v16.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v16.1.Drawing">
+      <HintPath>Devexpress\DevExpress.Pdf.v16.1.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v16.1.Core">
+      <HintPath>Devexpress\DevExpress.Printing.v16.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v16.1.Core">
+      <HintPath>Devexpress\DevExpress.RichEdit.v16.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v16.1.Core">
+      <HintPath>Devexpress\DevExpress.Sparkline.v16.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Srt.v16.1">
+      <HintPath>Devexpress\DevExpress.Srt.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraNavBar.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraNavBar.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraPrinting.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>Devexpress\stdole.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="ZwManaged">
+      <HintPath>Devexpress\ZwManaged.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="ZwDatabaseMgd">
+      <HintPath>Devexpress\ZwDatabaseMgd.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="DevExpress.XtraLayout.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraLayout.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraEditors.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v16.1">
+      <HintPath>Devexpress\DevExpress.Utils.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraGrid.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraGrid.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraVerticalGrid.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraVerticalGrid.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraTreeList.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>Devexpress\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="DevExpress.XtraBars.v16.1">
+      <HintPath>Devexpress\DevExpress.XtraBars.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="NCalc">
+      <HintPath>Devexpress\NCalc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="DevExpress.Data.v16.1">
+      <HintPath>Devexpress\DevExpress.Data.v16.1.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Etier\IconHelper\IconReader.cs" />
+    <Compile Include="Etier\IconHelper\Shell32.cs" />
+    <Compile Include="Etier\IconHelper\User32.cs" />
+    <Compile Include="Etier\IconHelper\IconListManager.cs" />
+    <Compile Include="ascad\ascad.cs" />
+    <Compile Include="ascad\ascadcabin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\ascadform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\ascadpalet.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ascad\asnseccrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\Ayarlar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\asnhesapfrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\dilekler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FirmaBilgileri.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmHastane.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmHesaplama.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmHesaplama2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmHesaplama3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmIsMerkezi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmKonut.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmLejant.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmOkul.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmOtel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmOtopark.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\FrmResmi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\inicibaba.cs" />
+    <Compile Include="ascad\MainForm2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\makmot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\motor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\teknikdosyaekle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\ureticiekle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\ureticigos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\yazilar.cs" />
+    <Compile Include="ascad\hesaplamalar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\masterproduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\olcudeis.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\paramman.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\paramman3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\productinfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\productsec.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\sertifikaekler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\szgturkce.cs" />
+    <Compile Include="ascad\szgturkce2.cs" />
+    <Compile Include="ascad\tsestandart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\scrt.cs" />
+    <Compile Include="ascad\srthepler.cs" />
+    <Compile Include="ascad\Giris.cs" />
+    <Compile Include="ascad\clsCompleteLift.cs" />
+    <Compile Include="ascad\clsMLift.cs" />
+    <Compile Include="ascad\clsMainLift.cs" />
+    <Compile Include="ascad\vtGroup.cs" />
+    <Compile Include="ascad\vtLift.cs" />
+    <Compile Include="ascad\clsKatBilgi.cs" />
+    <Compile Include="ascad\BlkPar.cs" />
+    <Compile Include="ascad\ConsParList.cs" />
+    <Compile Include="ascad\ParamList.cs" />
+    <Compile Include="ascad\structAnaTip.cs" />
+    <Compile Include="ascad\structTahrikTip.cs" />
+    <Compile Include="ascad\structTahrikYon.cs" />
+    <Compile Include="ascad\structTablist.cs" />
+    <Compile Include="ascad\structTahrik.cs" />
+    <Compile Include="ascad\structDimblk.cs" />
+    <Compile Include="ascad\structKatBilgileri.cs" />
+    <Compile Include="ascad\structHAMDBilgileri.cs" />
+    <Compile Include="ascad\myData.cs" />
+    <Compile Include="ascad\waitenform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\abc1.cs" />
+    <Compile Include="ascad\yardimvideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ascad\Properties\Resources.cs" />
+    <Compile Include="ascad\Properties\Settings.cs" />
+    <EmbeddedResource Include="ascad.ascadcabin.resources" />
+    <EmbeddedResource Include="ascad.ascadform.resources" />
+    <EmbeddedResource Include="ascad.ascadpalet.resources" />
+    <EmbeddedResource Include="ascad.asnseccrm.resources" />
+    <EmbeddedResource Include="ascad.asnhesapfrm.resources" />
+    <EmbeddedResource Include="ascad.dilekler.resources" />
+    <EmbeddedResource Include="ascad.MainForm2.resources" />
+    <EmbeddedResource Include="ascad.FirmaBilgileri.resources" />
+    <EmbeddedResource Include="ascad.FrmLejant.resources" />
+    <EmbeddedResource Include="ascad.makmot.resources" />
+    <EmbeddedResource Include="ascad.motor.resources" />
+    <EmbeddedResource Include="ascad.hesaplamalar.resources" />
+    <EmbeddedResource Include="ascad.masterproduct.resources" />
+    <EmbeddedResource Include="ascad.olcudeis.resources" />
+    <EmbeddedResource Include="ascad.paramman.resources" />
+    <EmbeddedResource Include="ascad.paramman3.resources" />
+    <EmbeddedResource Include="ascad.productinfo.resources" />
+    <EmbeddedResource Include="ascad.productsec.resources" />
+    <EmbeddedResource Include="ascad.Properties.Resources.resources" />
+    <EmbeddedResource Include="ascad.sertifikaekler.resources" />
+    <EmbeddedResource Include="ascad.tsestandart.resources" />
+    <EmbeddedResource Include="ascad.dll.licenses" />
+  </ItemGroup>
+</Project>

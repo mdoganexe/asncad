@@ -1,0 +1,2 @@
+C:\Users\Mhmtdgn\Desktop\Ascad\obj\x86\Debug\ascad.csprojResolveAssemblyReference.cache
+C:\Users\Mhmtdgn\Desktop\Ascad\obj\x86\Debug\ascad.csproj.CoreCompileInputs.cache

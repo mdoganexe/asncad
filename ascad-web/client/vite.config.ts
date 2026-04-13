@@ -5,7 +5,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Ascad/',  // GitHub Pages repo name
+  base: '/asncad/',  // GitHub Pages repo name
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') }
   },
